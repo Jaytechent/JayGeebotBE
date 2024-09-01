@@ -3,9 +3,11 @@ const { storeUserData } = require('./controllers/userController');
 const dotenv = require('dotenv');
 
 dotenv.config();
-
+const PORT = process.env.PORT || 3000;
 const token = process.env.TELEGRAM_BOT_TOKEN;
+const botUrl = process.env.BOT_URL;
 const bot = new TelegramBot(token, { polling: true });
+
 
 bot.onText(/\/start/, async (msg) => {
     const username = msg.from.username;
@@ -19,7 +21,7 @@ bot.onText(/\/start/, async (msg) => {
         console.error('Error storing user data:', error);
     }
 
-    const serverUrl = `https://geninfotech.live:${process.env.PORT}/${username}/${userId}`;
+    const serverUrl = `${botUrl}:${PORT}/${username}/${userId}`;
 
     // Define the options with the inline keyboard button
     const options = {
@@ -50,7 +52,7 @@ bot.onText(/\/connect/, async (msg) => {
         console.error('Error storing user data:', error);
     }
 
-    const serverUrl = `https://geninfotech.live:${process.env.PORT}/${username}/${userId}`;
+    const serverUrl = `${botUrl}:${PORT}/${username}/${userId}`;
 
     // Define the options with the inline keyboard button
     const options = {
