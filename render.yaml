@@ -1,0 +1,7 @@
+services:
+  - name: my-background-worker
+    type: worker
+    env: node
+    buildCommand: npm install
+    startCommand: node bot.js
+    plan: free
