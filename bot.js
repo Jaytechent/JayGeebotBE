@@ -1,3 +1,4 @@
+const http = require('http'); // Import the HTTP module, bcos of render deployment.
 const TelegramBot = require('node-telegram-bot-api');
 const { storeUserData } = require('./controllers/userController');
 const dotenv = require('dotenv');
@@ -86,6 +87,16 @@ const startBot = () => {
     }
 };
 
+// Simple HTTP server to keep Render happy
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Bot is running\n');
+});
+
+server.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
+});
+
 // Catch unhandled exceptions and restart the bot
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
@@ -96,36 +107,3 @@ process.on('uncaughtException', (error) => {
 startBot();
 
 module.exports = bot;
-
-
-// const TelegramBot = require('node-telegram-bot-api');
-// const dotenv = require('dotenv');
-
-// dotenv.config();
-
-// const token = process.env.TELEGRAM_BOT_TOKEN;
-// const bot = new TelegramBot(token, { polling: true });
-
-// bot.onText(/\/start/, (msg) => {
-//     const chatId = msg.chat.id;
-//     const username = msg.from.username;
-//     const userId = msg.from.id; // Added userId
-
-//     const serverUrl = `http://localhost:${process.env.PORT}/${username}/${userId}`;
-//     const message = `[Click here to proceed](${serverUrl})`;
-//     bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
-    
-// });
-
-// bot.onText(/\/connect/, (msg) => {
-//     // const chatId = msg.chat.id;
-//     const username = msg.from.username;
-//     const userId = msg.from.id; // Added userId
-
-//     const serverUrl = `http://localhost:${process.env.PORT}/${username}/${userId}`;
-//     const message = `[Click here to proceed](${serverUrl})`;
-//     bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
-
-// });
-
-// module.exports = bot;
