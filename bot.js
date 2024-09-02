@@ -27,7 +27,8 @@ const startBot = () => {
                 console.error('Error storing user data:', error);
             }
 
-            const serverUrl = `${botUrl}:${PORT}/${username}/${userId}`;
+          const serverUrl = `${botUrl}/${username}/${userId}`;
+
 
             const options = {
                 reply_markup: {
@@ -56,7 +57,8 @@ const startBot = () => {
                 console.error('Error storing user data:', error);
             }
 
-            const serverUrl = `${botUrl}:${PORT}/${username}/${userId}`;
+      const serverUrl = `${botUrl}/${username}/${userId}`;
+
 
             const options = {
                 reply_markup: {
