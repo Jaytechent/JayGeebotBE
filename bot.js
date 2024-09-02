@@ -1,5 +1,4 @@
-const http = require('http');// to satisfy render deployment req 
-const https = require('https'); // To make requests to your own HTTPS URL
+const http = require('http'); // Import the HTTP module, bcos of render deployment.
 const TelegramBot = require('node-telegram-bot-api');
 const { storeUserData } = require('./controllers/userController');
 const dotenv = require('dotenv');
@@ -27,13 +26,15 @@ const startBot = () => {
                 console.error('Error storing user data:', error);
             }
 
-          const serverUrl = `${botUrl}/${username}/${userId}`;
-
+            const webAppUrl = `${botUrl}/${username}/${userId}`;
 
             const options = {
                 reply_markup: {
                     inline_keyboard: [[
-                        { text: 'Click here to proceed', url: serverUrl }
+                        {
+                            text: 'Open Web App',
+                            web_app: { url: webAppUrl }
+                        }
                     ]]
                 }
             };
@@ -57,7 +58,7 @@ const startBot = () => {
                 console.error('Error storing user data:', error);
             }
 
-      const serverUrl = `${botUrl}/${username}/${userId}`;
+            const serverUrl = `${botUrl}/${username}/${userId}`;
 
 
             const options = {
@@ -100,29 +101,6 @@ server.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
 
-// Keep-alive logic: Periodically ping the bot's own URL
-const keepAlive = () => {
-    const options = {
-        hostname: 'jaygee-tgbot.onrender.com', // Replace with your actual Render URL
-        port: 443,
-        path: '/',
-        method: 'GET'
-    };
-
-    const req = https.request(options, (res) => {
-        console.log(`Keep-alive ping: ${res.statusCode}`);
-    });
-
-    req.on('error', (error) => {
-        console.error(`Keep-alive error: ${error.message}`);
-    });
-
-    req.end();
-};
-
-// Ping every 5 minutes (300000 ms)
-setInterval(keepAlive, 300000);
-
 // Catch unhandled exceptions and restart the bot
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
@@ -133,3 +111,4 @@ process.on('uncaughtException', (error) => {
 startBot();
 
 module.exports = bot;
+
