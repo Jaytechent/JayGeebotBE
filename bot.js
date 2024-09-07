@@ -137,7 +137,3 @@ startBot();
 module.exports = bot;
 
 
-startBot();
-
-module.exports = bot;
-
