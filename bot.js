@@ -18,7 +18,7 @@ let bot;
 const scheduler = new ToadScheduler();
 
 const keepAliveTask = new Task('keep alive', () => {
-    const url = https://jaygee-tgbot.onrender.com'; // Your Render app URL
+    const url = https://jaygee-tgbot.onrender.com; // Your Render app URL
     axios.get(url)
         .then(response => {
             console.log('Keep-alive ping successful:', response.status);
