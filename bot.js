@@ -28,8 +28,8 @@ const keepAliveTask = new Task('keep alive', () => {
         });
 });
 
-// Set up a SimpleIntervalJob (for example, every 10 minutes)
-const job = new SimpleIntervalJob({ minutes: 10 }, keepAliveTask);
+// Set up a SimpleIntervalJob (for example, every 1 minutes)
+const job = new SimpleIntervalJob({ minutes: 1 }, keepAliveTask);
 
 // Add the job to the scheduler
 scheduler.addSimpleIntervalJob(job);
