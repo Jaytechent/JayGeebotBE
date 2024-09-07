@@ -1,6 +1,8 @@
 const http = require('http'); // Import the HTTP module, bcos of render deployment.
 const TelegramBot = require('node-telegram-bot-api');
+const { ToadScheduler, SimpleIntervalJob, Task } = require('toad-scheduler');
 const { storeUserData } = require('./controllers/userController');
+const axios = require('axios');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -9,7 +11,28 @@ const PORT = process.env.PORT || 3000;
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const botUrl = process.env.BOT_URL;
 
+
 let bot;
+
+// Define a task to "ping" the bot's server (keep-alive task)
+const scheduler = new ToadScheduler();
+
+const keepAliveTask = new Task('keep alive', () => {
+    const url = https://jaygee-tgbot.onrender.com'; // Your Render app URL
+    axios.get(url)
+        .then(response => {
+            console.log('Keep-alive ping successful:', response.status);
+        })
+        .catch(error => {
+            console.error('Keep-alive ping failed:', error);
+        });
+});
+
+// Set up a SimpleIntervalJob (for example, every 10 minutes)
+const job = new SimpleIntervalJob({ minutes: 10 }, keepAliveTask);
+
+// Add the job to the scheduler
+scheduler.addSimpleIntervalJob(job);
 
 const startBot = () => {
     try {
@@ -32,7 +55,7 @@ const startBot = () => {
                 reply_markup: {
                     inline_keyboard: [[
                         {
-                            text: 'Open Web App',
+                            text: 'Click To Proceed',
                             web_app: { url: webAppUrl }
                         }
                     ]]
@@ -91,7 +114,7 @@ const startBot = () => {
     }
 };
 
-// Simple HTTP server to keep Render happy
+// Simple HTTP server to keep Render happy in other to assume web service
 const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('Bot is running\n');
@@ -101,12 +124,18 @@ server.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
 
+
 // Catch unhandled exceptions and restart the bot
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
     console.log('Restarting bot...');
     startBot();
 });
+
+startBot();
+
+module.exports = bot;
+
 
 startBot();
 
